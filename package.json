@@ -1,6 +1,6 @@
 {
   "name": "react-search-select-dropdown",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A customizable React autocomplete/search select dropdown component with TypeScript support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
