@@ -7,11 +7,13 @@ A highly customizable React autocomplete/search select dropdown component with T
 - 🔍 **Search functionality** - Filter options as you type
 - ⌨️ **Keyboard navigation** - Navigate with arrow keys, select with Enter
 - 🎨 **Fully customizable styling** - Override default inline styles with `customStyles` prop
+- 🎭 **Custom input support** - Use any UI library (Material-UI, Ant Design, etc.) via `renderInput` prop
+- 🔤 **TypeScript support** - Full type definitions included
+- 🎯 **Generic types** - Support for any value type (string, number, objects)
+- 🌐 **i18n ready** - Customizable text for localization
 - 📱 **Responsive design** - Works on all screen sizes
 - ♿ **Accessible** - ARIA labels and keyboard support
-- 🔤 **TypeScript support** - Full type definitions included
-- 🎯 **Generic types** - Support for any value type
-- 💅 **Inline styles** - No external CSS required (except for scrollbar)
+- 💅 **Inline styles** - No CSS conflicts, minimal external CSS (only scrollbar)
 
 ## Installation
 
@@ -31,7 +33,31 @@ or
 pnpm add react-search-select-dropdown
 ```
 
-## Usage
+## Quick Start
+
+```tsx
+import { Autocomplete } from 'react-search-select-dropdown';
+import type { AutocompleteOption } from 'react-search-select-dropdown';
+import 'react-search-select-dropdown/styles.css';
+
+const options: AutocompleteOption[] = [
+  { value: 'us', label: 'United States' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'mx', label: 'Mexico' },
+];
+
+function App() {
+  return (
+    <Autocomplete
+      options={options}
+      placeholder="Search country..."
+      onSelect={(option) => console.log('Selected:', option)}
+    />
+  );
+}
+```
+
+## Usage Examples
 
 ### Example 1: String Values (Default)
 
@@ -324,33 +350,7 @@ function App() {
 export default App;
 ```
 
-### Custom Styling Example
-
-```css
-/* Custom styles for selected info */
-.selected-info {
-  margin-top: 12px;
-  padding: 12px;
-  background-color: #f0fdf4;
-  border: 1px solid #86efac;
-  border-radius: 6px;
-  color: #166534;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* Override autocomplete styles */
-.autocomplete-input {
-  border-color: #3b82f6;
-}
-
-.autocomplete-option.selected {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-```
-
-## API
+## API Reference
 
 ### Props
 
@@ -419,19 +419,14 @@ interface AutocompleteProps<T = string> {
 }
 ```
 
-## Keyboard Navigation
+## Customization
 
-- **Arrow Down**: Navigate to next option
-- **Arrow Up**: Navigate to previous option
-- **Enter**: Select highlighted option
-- **Escape**: Close dropdown and blur input
-
-## Custom Styling
+### Custom Styles
 
 The component uses inline styles by default, which you can fully customize using the `customStyles` prop:
 
 ```tsx
-import { Autocomplete, AutocompleteStyles } from 'react-search-select-dropdown';
+import { Autocomplete, type AutocompleteStyles } from 'react-search-select-dropdown';
 import type { AutocompleteOption } from 'react-search-select-dropdown';
 import 'react-search-select-dropdown/styles.css';
 
@@ -472,9 +467,7 @@ function App() {
 }
 ```
 
-### Available Style Properties
-
-You can customize these style objects through the `customStyles` prop:
+#### Available Style Properties
 
 - `wrapper` - Main container
 - `inputWrapper` - Input container
@@ -521,7 +514,9 @@ function CustomInputExample() {
           className="my-custom-input-class"
           style={{
             ...props.style,
-            border: '2px solid #10b981',
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            borderColor: '#10b981',
             fontSize: '16px',
             fontWeight: 'bold',
           }}
@@ -556,6 +551,13 @@ function MaterialUIExample() {
   );
 }
 ```
+
+## Keyboard Navigation
+
+- **Arrow Down**: Navigate to next option
+- **Arrow Up**: Navigate to previous option
+- **Enter**: Select highlighted option
+- **Escape**: Close dropdown and blur input
 
 ## License
 
