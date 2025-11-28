@@ -1,16 +1,17 @@
 # React Search Select Dropdown
 
-A customizable React autocomplete/search select dropdown component with TypeScript support.
+A highly customizable React autocomplete/search select dropdown component with TypeScript support and inline styles.
 
 ## Features
 
 - 🔍 **Search functionality** - Filter options as you type
 - ⌨️ **Keyboard navigation** - Navigate with arrow keys, select with Enter
-- 🎨 **Customizable styling** - Override default styles with your own
+- 🎨 **Fully customizable styling** - Override default inline styles with `customStyles` prop
 - 📱 **Responsive design** - Works on all screen sizes
 - ♿ **Accessible** - ARIA labels and keyboard support
 - 🔤 **TypeScript support** - Full type definitions included
 - 🎯 **Generic types** - Support for any value type
+- 💅 **Inline styles** - No external CSS required (except for scrollbar)
 
 ## Installation
 
@@ -359,8 +360,11 @@ export default App;
 | `placeholder` | `string` | `'Search...'` | Placeholder text for the input |
 | `onSelect` | `(option: AutocompleteOption<T> \| null) => void` | `undefined` | Callback when an option is selected |
 | `disabled` | `boolean` | `false` | Disable the autocomplete |
-| `className` | `string` | `''` | Additional CSS class for the wrapper |
 | `getOptionKey` | `(option: AutocompleteOption<T>) => string \| number` | Uses `value` or `label` | Function to generate unique keys for options |
+| `customStyles` | `AutocompleteStyles` | `{}` | Override default styles with custom inline styles |
+| `noResultsText` | `string` | `'No results found'` | Text to display when no options match the search |
+| `value` | `AutocompleteOption<T> \| null` | `undefined` | Controlled value for the autocomplete |
+| `renderInput` | `(props: AutocompleteInputProps) => ReactNode` | `undefined` | Custom input component renderer for maximum flexibility |
 
 ### Types
 
@@ -370,13 +374,48 @@ interface AutocompleteOption<T = string> {
   label: string;
 }
 
+interface AutocompleteInputProps {
+  ref: React.RefObject<HTMLInputElement>;
+  type: string;
+  style: CSSProperties;
+  placeholder: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onFocus: () => void;
+  onBlur: () => void;
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
+  disabled: boolean;
+  autoComplete: string;
+}
+
+interface AutocompleteStyles {
+  wrapper?: CSSProperties;
+  inputWrapper?: CSSProperties;
+  input?: CSSProperties;
+  inputFocus?: CSSProperties;
+  inputDisabled?: CSSProperties;
+  clearButton?: CSSProperties;
+  clearButtonHover?: CSSProperties;
+  arrow?: CSSProperties;
+  arrowOpen?: CSSProperties;
+  dropdown?: CSSProperties;
+  option?: CSSProperties;
+  optionHighlighted?: CSSProperties;
+  optionSelected?: CSSProperties;
+  optionHighlightedSelected?: CSSProperties;
+  noOptions?: CSSProperties;
+}
+
 interface AutocompleteProps<T = string> {
   options: AutocompleteOption<T>[];
   placeholder?: string;
   onSelect?: (option: AutocompleteOption<T> | null) => void;
   disabled?: boolean;
-  className?: string;
   getOptionKey?: (option: AutocompleteOption<T>) => string | number;
+  customStyles?: AutocompleteStyles;
+  noResultsText?: string;
+  value?: AutocompleteOption<T> | null;
+  renderInput?: (props: AutocompleteInputProps) => ReactNode;
 }
 ```
 
@@ -389,19 +428,133 @@ interface AutocompleteProps<T = string> {
 
 ## Custom Styling
 
-The component comes with default styles, but you can customize them by overriding the CSS classes:
+The component uses inline styles by default, which you can fully customize using the `customStyles` prop:
 
-```css
-.autocomplete-wrapper { /* Wrapper container */ }
-.autocomplete-input-wrapper { /* Input container */ }
-.autocomplete-input { /* Input field */ }
-.autocomplete-clear { /* Clear button */ }
-.autocomplete-arrow { /* Dropdown arrow */ }
-.autocomplete-dropdown { /* Dropdown list */ }
-.autocomplete-option { /* Individual option */ }
-.autocomplete-option.highlighted { /* Highlighted option */ }
-.autocomplete-option.selected { /* Selected option */ }
-.autocomplete-no-options { /* No results message */ }
+```tsx
+import { Autocomplete, AutocompleteStyles } from 'react-search-select-dropdown';
+import type { AutocompleteOption } from 'react-search-select-dropdown';
+import 'react-search-select-dropdown/styles.css';
+
+const customStyles: AutocompleteStyles = {
+  input: {
+    borderColor: '#10b981',
+    fontSize: '16px',
+  },
+  inputFocus: {
+    borderColor: '#059669',
+    boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.1)',
+  },
+  dropdown: {
+    borderColor: '#10b981',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+  },
+  option: {
+    padding: '12px 16px',
+    fontSize: '15px',
+  },
+  optionHighlighted: {
+    backgroundColor: '#d1fae5',
+  },
+  optionSelected: {
+    backgroundColor: '#10b981',
+    color: 'white',
+  },
+};
+
+function App() {
+  return (
+    <Autocomplete
+      options={options}
+      placeholder="Search..."
+      customStyles={customStyles}
+    />
+  );
+}
+```
+
+### Available Style Properties
+
+You can customize these style objects through the `customStyles` prop:
+
+- `wrapper` - Main container
+- `inputWrapper` - Input container
+- `input` - Input field base styles
+- `inputFocus` - Input field when focused
+- `inputDisabled` - Input field when disabled
+- `clearButton` - Clear button base styles
+- `clearButtonHover` - Clear button on hover
+- `arrow` - Dropdown arrow base styles
+- `arrowOpen` - Dropdown arrow when open
+- `dropdown` - Dropdown list container
+- `option` - Individual option base styles
+- `optionHighlighted` - Option when highlighted
+- `optionSelected` - Option when selected
+- `optionHighlightedSelected` - Option when both highlighted and selected
+- `noOptions` - No results message
+
+### Custom No Results Text
+
+```tsx
+<Autocomplete
+  options={options}
+  noResultsText="No se encontraron resultados"
+/>
+```
+
+### Custom Input Component
+
+You can provide your own input component using the `renderInput` prop. This is useful when you want to integrate with UI libraries like Material-UI, Ant Design, or any custom input:
+
+```tsx
+import { Autocomplete, AutocompleteInputProps } from 'react-search-select-dropdown';
+import type { AutocompleteOption } from 'react-search-select-dropdown';
+import 'react-search-select-dropdown/styles.css';
+
+// Example with a custom styled input
+function CustomInputExample() {
+  return (
+    <Autocomplete
+      options={options}
+      renderInput={(props: AutocompleteInputProps) => (
+        <input
+          {...props}
+          className="my-custom-input-class"
+          style={{
+            ...props.style,
+            border: '2px solid #10b981',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        />
+      )}
+    />
+  );
+}
+
+// Example with Material-UI TextField
+import TextField from '@mui/material/TextField';
+
+function MaterialUIExample() {
+  return (
+    <Autocomplete
+      options={options}
+      renderInput={(props: AutocompleteInputProps) => (
+        <TextField
+          inputRef={props.ref}
+          value={props.value}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          onBlur={props.onBlur}
+          onKeyDown={props.onKeyDown}
+          placeholder={props.placeholder}
+          disabled={props.disabled}
+          fullWidth
+          variant="outlined"
+        />
+      )}
+    />
+  );
+}
 ```
 
 ## License
