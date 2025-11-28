@@ -357,7 +357,7 @@ function App() {
 You can pass a completely custom input component using the `renderInput` prop. This is useful for custom styling or integrating with UI libraries:
 
 ```tsx
-import { Autocomplete, AutocompleteInputProps } from "react-search-select-dropdown";
+import { Autocomplete, type AutocompleteInputProps } from "react-search-select-dropdown";
 import type { AutocompleteOption } from "react-search-select-dropdown";
 import "react-search-select-dropdown/styles.css";
 
