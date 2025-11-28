@@ -352,6 +352,76 @@ function App() {
 <Autocomplete options={options} noResultsText="No se encontraron resultados" />
 ```
 
+### Custom Input with renderInput
+
+You can pass a completely custom input component using the `renderInput` prop. This is useful for custom styling or integrating with UI libraries:
+
+```tsx
+import { Autocomplete, AutocompleteInputProps } from "react-search-select-dropdown";
+import type { AutocompleteOption } from "react-search-select-dropdown";
+import "react-search-select-dropdown/styles.css";
+
+const countryOptions: AutocompleteOption[] = [
+  { value: "us", label: "United States" },
+  { value: "ca", label: "Canada" },
+  { value: "mx", label: "Mexico" },
+];
+
+function App() {
+  return (
+    <Autocomplete
+      options={countryOptions}
+      placeholder="Custom styled input..."
+      onSelect={(option) => {
+        console.log("Custom input selected:", option);
+      }}
+      renderInput={(props: AutocompleteInputProps) => (
+        <input
+          ref={props.ref}
+          type={props.type}
+          value={props.value}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          onBlur={props.onBlur}
+          onKeyDown={props.onKeyDown}
+          placeholder={props.placeholder}
+          disabled={props.disabled}
+          autoComplete={props.autoComplete}
+          style={{
+            ...props.style,
+            borderWidth: "2px",
+            borderStyle: "solid",
+            borderColor: "#10b981",
+            borderRadius: "8px",
+            fontSize: "16px",
+            fontWeight: "bold",
+            padding: "12px 60px 12px 16px",
+            backgroundColor: "#f0fdf4",
+          }}
+        />
+      )}
+      customStyles={{
+        dropdown: {
+          maxHeight: "300px",
+          borderColor: "#10b981",
+        },
+        option: {
+          padding: "12px 16px",
+          fontSize: "16px",
+        },
+        optionHighlighted: {
+          backgroundColor: "#d1fae5",
+        },
+        optionSelected: {
+          backgroundColor: "#10b981",
+          color: "white",
+        },
+      }}
+    />
+  );
+}
+```
+
 ### Custom Input with Material-UI
 
 You can use any UI library component as the input by using the `renderInput` prop:
