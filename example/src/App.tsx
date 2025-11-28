@@ -100,7 +100,7 @@ function App() {
           </div>
         )}
       </div>
-
+      {/* -------------------------------------------------------------------------- */}
       {/* Example 2: Number Values */}
       <div style={style.formGroup}>
         <label style={style.formLabel}>Example 2: Number Values</label>
@@ -133,7 +133,7 @@ function App() {
           </div>
         )}
       </div>
-
+      {/* -------------------------------------------------------------------------- */}
       {/* Example 3: Custom Object Values */}
       <div style={style.formGroup}>
         <label style={style.formLabel}>
@@ -176,7 +176,7 @@ function App() {
           </div>
         )}
       </div>
-
+      {/* -------------------------------------------------------------------------- */}
       {/* Example 5: Custom Input with renderInput */}
       <div style={style.formGroup}>
         <label style={style.formLabel}>
@@ -232,7 +232,7 @@ function App() {
           }}
         />
       </div>
-
+      {/* -------------------------------------------------------------------------- */}
       {/* Example 4: Disabled State */}
       <div style={style.formGroup}>
         <label style={style.formLabel}>Example 4: Disabled State</label>
